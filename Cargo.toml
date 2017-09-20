@@ -1,0 +1,6 @@
+[package]
+name = "iron_woods"
+version = "0.1.0"
+authors = ["CloneRob <ropamen@gmail.com>"]
+
+[dependencies]
