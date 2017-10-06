@@ -1,33 +1,14 @@
-use std::sync::Arc;
 use std::collections::HashMap;
-
-type Class = u16;
-trait Feature{}
-struct Categorical {}
-impl Feature for Categorical {}
-
-struct Continuous {}
-impl Feature for Continuous {}
-
-struct Discrete {}
-impl Feature for Discrete {}
-
-// struct Class {}
-struct Node {
-    left: Box<Node>,
-    right: Box<Node>,
-    ntype: NodeType,
-}
-enum NodeType {
-    Intermediate{ threshold: f32},
-    Leaf(Class)
-}
-struct CART {
-    root: Box<Node>,
-}
-struct Dataset(HashMap<String, Arc<Feature>>);
-struct Entropy {}
+use std::collections::HashSet;
+pub mod decision_tree;
+pub mod feature;
+pub mod data;
 
 fn main() {
     println!("Hello, world!");
+    let feature = vec![1, 2, 1, 3, 1, 5, 6, 2, 24, 11, 231];
+    let unique_feature: HashSet<_> = feature.into_iter().collect();
+    for i in unique_feature {
+        println!("{}", i);
+    }
 }
