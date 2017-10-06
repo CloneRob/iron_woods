@@ -6,7 +6,7 @@ pub struct DecisionTree {
     min_split: usize,
     min_impurity: f32,
     max_depth: usize,
-    // impurity_fn: fn(&[Feature<Box<V>>], &[Feature<Box<V>>]) -> f32,
+    cost_fn: fn(&[f32]) -> f32,
     leaf_fn: fn() -> f32,
 }
 
@@ -31,9 +31,14 @@ pub enum DecisionNode {
     }
 }
 
-fn entropy() -> f32 {
-    unimplemented!()
+fn entropy(label_dist: &[f32]) -> f32 {
+    let mut entropy = 0.0;
+    for p in label_dist {
+        entropy += p * p.ln();
+    }
+    entropy
 }
+
 
 fn gini_index() -> f32 {
     unimplemented!()
