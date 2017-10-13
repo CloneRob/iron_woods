@@ -5,7 +5,6 @@ use std::iter::FromIterator;
 use std::ops::{Index, RangeTo, RangeFrom};
 use std::collections::{HashSet, HashMap};
 
-use ::data::Splitable;
 
 #[derive(PartialEq, PartialOrd, Clone, Debug, Hash)]
 pub struct Label(u32);
@@ -18,7 +17,7 @@ impl Ord for Label {
     }
 }
 
-fn label_distribution(label_slice: &[Label]) -> Vec<f32> {
+pub fn label_distribution(label_slice: &[&Label]) -> Vec<f32> {
     let norm_const = label_slice.len() as f32;
     let mut counting_map: HashMap<&Label, u32> = HashMap::new();
     for l in label_slice {
@@ -27,7 +26,7 @@ fn label_distribution(label_slice: &[Label]) -> Vec<f32> {
     counting_map.values().map(|v| *v as f32 / norm_const).collect()
 }
 
-#[derive(PartialEq, PartialOrd, Clone, Copy, Debug, Hash)]
+#[derive(PartialEq, PartialOrd, Clone, Debug, Hash)]
 pub struct Value(i32);
 
 impl Eq for Value {}
@@ -39,24 +38,28 @@ impl Ord for Value {
     }
 }
 
-pub struct Feature {
-    values: Vec<Value>,
-    unique_values: Option<HashSet<Value>>, 
-}
+// pub struct Feature<T> {
+//     data: FeatureType,
+//     unique_values: HashSet<T>,
+// }
+// pub enum FeatureType {
+//     Discrete(Vec<i32>),
+//     Continuous(Vec<f32>),
+// }
 
 
-impl Feature {
-    fn set_uniques(&mut self) {
-        if let Some(ref uv) = self.unique_values {
-            return
-        } else {
-            let uv: HashSet<Value> = self.values.iter().map(|v| v.clone()).collect();
-            self.unique_values = Some(uv);
-        }
-    }
-}
+// impl Feature {
+//     fn set_uniques(&mut self) {
+//         if let Some(ref uv) = self.unique_values {
+//             return
+//         } else {
+//             let uv: HashSet<Value> = self.values.iter().map(|v| v.clone()).collect();
+//             self.unique_values = Some(uv);
+//         }
+//     }
+// }
 
-pub struct FeatureSlice<'s> {
-    values: &'s [Value],
-    unique_values: Option<HashSet<Value>>,
-}
+// pub struct FeatureSlice<'s> {
+//     values: &'s [Value],
+//     unique_values: Option<HashSet<Value>>,
+// }

@@ -1,5 +1,7 @@
+use ::feature;
 use ::feature::Label;
-use ::data::Dataset;
+use ::data::{Dataset, Splitable};
+use std::default::Default;
 
 pub struct DecisionTree {
     root: Option<DecisionNode>,
@@ -10,14 +12,33 @@ pub struct DecisionTree {
     leaf_fn: fn() -> f32,
 }
 
+impl Default for DecisionTree {
+    fn default() -> DecisionTree {
+        DecisionTree {
+            root: None,
+            min_split: 0,
+            min_impurity: 0.5,
+            max_depth: 15,
+            cost_fn: entropy,
+            leaf_fn: gini_index,
+        }
+    }
+}
+
 
 impl DecisionTree {
-    fn build_tree(&mut self, dataset: &Dataset) {
-        for feature in &dataset.set {
-            for (index, value) in feature.into_iter().enumerate() {
-                // let left, right =     
+    fn build_tree(&mut self, dataset: &Dataset, depth: usize) -> DecisionTree {
+        for (feature_index, feature) in dataset.set.iter().enumerate() {
+            for (value_index, value) in feature.iter().enumerate() {
+                let (left, right) = dataset.split_at_threshold(feature_index, value.clone());
+                let left_distribution = feature::label_distribution(&left.labels[..]);
+                let left_entropy = (self.cost_fn)(&left_distribution[..]);
+
+                let right_distribution = feature::label_distribution(&right.labels[..]);
+                let right_entropy = (self.cost_fn)(&right_distribution[..]);
             }
         }
+        DecisionTree::default()
     }
 }
 
