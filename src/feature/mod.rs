@@ -1,7 +1,11 @@
 use std::cmp;
 use std::cmp::Ordering;
 use std::hash::{Hash, Hasher};
+use std::iter::FromIterator;
+use std::ops::{Index, RangeTo, RangeFrom};
 use std::collections::{HashSet, HashMap};
+
+use ::data::Splitable;
 
 #[derive(PartialEq, PartialOrd, Clone, Debug, Hash)]
 pub struct Label(u32);
@@ -23,7 +27,7 @@ fn label_distribution(label_slice: &[Label]) -> Vec<f32> {
     counting_map.values().map(|v| *v as f32 / norm_const).collect()
 }
 
-#[derive(PartialEq, PartialOrd, Clone, Debug, Hash)]
+#[derive(PartialEq, PartialOrd, Clone, Copy, Debug, Hash)]
 pub struct Value(i32);
 
 impl Eq for Value {}
@@ -37,6 +41,22 @@ impl Ord for Value {
 
 pub struct Feature {
     values: Vec<Value>,
+    unique_values: Option<HashSet<Value>>, 
 }
 
-impl Feature {}
+
+impl Feature {
+    fn set_uniques(&mut self) {
+        if let Some(ref uv) = self.unique_values {
+            return
+        } else {
+            let uv: HashSet<Value> = self.values.iter().map(|v| v.clone()).collect();
+            self.unique_values = Some(uv);
+        }
+    }
+}
+
+pub struct FeatureSlice<'s> {
+    values: &'s [Value],
+    unique_values: Option<HashSet<Value>>,
+}

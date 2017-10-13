@@ -1,10 +1,13 @@
 use std::collections::HashMap;
-use ::feature::{Value, Label};
 
-trait Splitable {
+use ::feature::{Feature, Value, Label};
+
+
+pub trait Splitable {
     fn split_at_index(&self, index: usize) -> (Subset, Subset);
-    fn split_at_threshold<T>(&self, threshold: T) -> (Subset, Subset);
+    fn split_at_threshold(&self, threshold: Value) -> (Subset, Subset);
 }
+
 pub struct Dataset {
     pub mapping: HashMap<usize, String>,
     pub set: Vec<Vec<Value>>,
@@ -29,7 +32,7 @@ impl Splitable for Dataset {
         (Subset::new(left_subset, left_labels), Subset::new(right_subset, right_labels))
     }
 
-    fn split_at_threshold<Value>(&self, threshold: Value) -> (Subset, Subset) {
+    fn split_at_threshold(&self, threshold: Value) -> (Subset, Subset) {
         unimplemented!()
     }
 }
@@ -67,7 +70,13 @@ impl<'s> Splitable for Subset<'s> {
         (Subset::new(left_subset, left_labels), Subset::new(right_subset, right_labels))
     }
 
-    fn split_at_threshold<Value>(&self, threshold: Value) -> (Subset, Subset) {
+    fn split_at_threshold(&self, threshold: Value) -> (Subset, Subset) {
+        let mut left_subset: Vec<&[Value]> = Vec::with_capacity(self.set.len());
+        let mut right_subset: Vec<&[Value]> = Vec::with_capacity(self.set.len());
+
+        for feature in &self.set {
+            let (left_slice, right_slice): (Vec<Value>, Vec<Value>) = feature.into_iter().partition(|&t| t <= &threshold);
+        }
         unimplemented!()
     }
 }
