@@ -38,6 +38,12 @@ impl Ord for Value {
     }
 }
 
+impl Value {
+    pub fn max_val() -> Value {
+        Value(50000)
+    }
+}
+
 // pub struct Feature<T> {
 //     data: FeatureType,
 //     unique_values: HashSet<T>,

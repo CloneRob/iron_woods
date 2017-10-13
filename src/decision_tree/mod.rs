@@ -1,5 +1,5 @@
 use ::feature;
-use ::feature::Label;
+use ::feature::{Value, Label};
 use ::data::{Dataset, Splitable};
 use std::default::Default;
 
@@ -28,6 +28,7 @@ impl Default for DecisionTree {
 
 impl DecisionTree {
     fn build_tree(&mut self, dataset: &Dataset, depth: usize) -> DecisionTree {
+        let mut min_cost = 99999f32;
         for (feature_index, feature) in dataset.set.iter().enumerate() {
             for (value_index, value) in feature.iter().enumerate() {
                 let (left, right) = dataset.split_at_threshold(feature_index, value.clone());
@@ -36,9 +37,20 @@ impl DecisionTree {
 
                 let right_distribution = feature::label_distribution(&right.labels[..]);
                 let right_entropy = (self.cost_fn)(&right_distribution[..]);
+                let cost = left_entropy + right_entropy;
+
+                if cost < min_cost {
+                    min_cost = cost;
+                }
             }
         }
+
         DecisionTree::default()
+    }
+
+    fn argmin_cost<D: Splitable>(data: D) -> (f32, usize, Value) {
+        
+        unimplemented!()
     }
 }
 
